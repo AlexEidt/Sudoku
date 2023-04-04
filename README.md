@@ -7,5 +7,5 @@ Board size can be between 2 and 5 squares per box, limited by available alphanum
 <br />
 
 <p align="center">
-    <img src="https://github.com/AlexEidt/docs/blob/master/Sudoku/sudoku.gif" alt="Sudoku Engine">
+    <img src="https://github.com/AlexEidt/docs/blob/master/Sudoku/sudoku.gif" width="100%" alt="Sudoku Engine">
 </p>
