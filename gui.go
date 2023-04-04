@@ -252,7 +252,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 
 func main() {
 	if Size < 2 || Size > 5 {
-		panic(fmt.Sprintf("Board Size: %d must be between 2 and 5", Size))
+		panic(fmt.Sprintf("board size: %d must be between 2 and 5", Size))
 	}
 
 	game := NewGame(Width, Size)
