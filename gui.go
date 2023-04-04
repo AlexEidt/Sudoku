@@ -30,10 +30,10 @@ type Game struct {
 	number   int     // Conflicting number.
 }
 
-var (
-	Width = 800
-	Size  = 4 // Between 2 and 5.
-	Level = Medium
+const (
+	Width = 800    // Window width.
+	Size  = 4      // Between 2 and 5.
+	Level = Medium // Difficulty.
 )
 
 func NewGame(screenwidth, boardsize int) *Game {
