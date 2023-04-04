@@ -107,10 +107,6 @@ func (g *Game) Update() error {
 	dc := g.Canvas
 	size := g.Board.Size()
 
-	// Clear Canvas.
-	dc.SetRGB255(255, 255, 255)
-	dc.Clear()
-
 	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
 		// Highlight square when clicked.
 		x, y := ebiten.CursorPosition()
@@ -133,11 +129,6 @@ func (g *Game) Update() error {
 		g.Current.X = math.Min(math.Max(0, g.Current.X), float64(size*size-1))
 		g.Current.Y = math.Min(math.Max(0, g.Current.Y), float64(size*size-1))
 	}
-
-	// Draw Selected Square.
-	dc.SetRGB255(88, 150, 236)
-	dc.DrawRectangle(g.Current.X*g.cellsize+g.offset, g.Current.Y*g.cellsize+g.offset, g.cellsize, g.cellsize)
-	dc.Fill()
 
 	// Backspace removes number on selected square.
 	if inpututil.IsKeyJustPressed(ebiten.KeyBackspace) {
@@ -162,6 +153,26 @@ func (g *Game) Update() error {
 	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
 		if !g.Board.Generating() {
 			g.Board.Clear()
+		}
+	}
+
+	// Clear Canvas.
+	dc.SetRGB255(255, 255, 255)
+	dc.Clear()
+
+	// Draw Selected Square.
+	dc.SetRGB255(88, 150, 236)
+	dc.DrawRectangle(g.Current.X*g.cellsize+g.offset, g.Current.Y*g.cellsize+g.offset, g.cellsize, g.cellsize)
+	dc.Fill()
+
+	// Draw Gray Squares for locked numbers.
+	for row := 0; row < size*size; row++ {
+		for col := 0; col < size*size; col++ {
+			if g.Board.IsLocked(row, col) {
+				dc.SetRGB255(170, 170, 170)
+				dc.DrawRectangle(float64(row)*g.cellsize+g.offset, float64(col)*g.cellsize+g.offset, g.cellsize, g.cellsize)
+				dc.Fill()
+			}
 		}
 	}
 
