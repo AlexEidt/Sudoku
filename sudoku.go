@@ -192,6 +192,14 @@ func (s *Sudoku) FindNextEmpty(r, c *int) bool {
 	return false
 }
 
+func (s *Sudoku) Finish() bool {
+	s.generating = true
+	res := s.Solve()
+	s.generating = false
+
+	return res
+}
+
 func (s *Sudoku) Solve() bool {
 	row, col := 0, 0
 	if !s.FindNextEmpty(&row, &col) {

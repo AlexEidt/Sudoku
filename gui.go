@@ -95,7 +95,7 @@ func (g *Game) drawHighlight() {
 
 	dc.SetRGBA255(0, 0, 0, g.htimer)
 	dc.DrawStringAnchored(
-		fmt.Sprintf("%d", g.number),
+		string("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"[g.number]),
 		(g.hrow+1.0)*g.cellsize-0.5*g.cellsize+g.offset,
 		(g.hcol+1.0)*g.cellsize-0.6*g.cellsize+g.offset,
 		0.5,
@@ -147,7 +147,7 @@ func (g *Game) Update() error {
 		}
 	}
 	// Generate Sudoku with difficulty.
-	if inpututil.IsKeyJustPressed(ebiten.KeyShift) {
+	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
 		if !g.Board.Generating() {
 			go g.Board.Generate(Level)
 		}
@@ -155,7 +155,7 @@ func (g *Game) Update() error {
 	// Solve current board.
 	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
 		if !g.Board.Generating() {
-			go g.Board.Solve()
+			go g.Board.Finish()
 		}
 	}
 	// Clear Sudoku board.
@@ -200,16 +200,9 @@ func (g *Game) Update() error {
 				dc.Fill()
 			}
 			if g.Board.Has(row, col) {
-				number := g.Board.At(row, col)
-				var str string
-				if number <= 9 {
-					str = fmt.Sprintf("%d", number)
-				} else {
-					str = string("ABCDEFGHIJKLMNOPQRSTUVWXYZ"[number-10])
-				}
 				dc.SetRGB255(0, 0, 0)
 				dc.DrawStringAnchored(
-					str,
+					string("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"[g.Board.At(row, col)]),
 					float64(row+1)*g.cellsize-0.5*g.cellsize+g.offset,
 					float64(col+1)*g.cellsize-0.6*g.cellsize+g.offset,
 					0.5,
