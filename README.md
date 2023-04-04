@@ -4,4 +4,8 @@ Simple Sudoku Solver and Generator. `Shift` to Generate a new Sudoku, `Enter` to
 
 Board size can be between 2 and 5 squares per box, limited by available alphanumeric characters. Run `gui.go` to play.
 
-<img src="https://github.com/AlexEidt/docs/blob/master/Sudoku/sudoku.gif" alt="Sudoku Engine">
+<br />
+
+<p align="center">
+    <img src="https://github.com/AlexEidt/docs/blob/master/Sudoku/sudoku.gif" alt="Sudoku Engine">
+</p>
