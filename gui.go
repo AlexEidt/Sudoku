@@ -12,6 +12,12 @@ import (
 	"golang.org/x/image/font/gofont/gobold"
 )
 
+const (
+	Width = 800    // Window width.
+	Size  = 4      // Between 2 and 5.
+	Level = Medium // Difficulty.
+)
+
 type Point struct {
 	X, Y float64
 }
@@ -29,12 +35,6 @@ type Game struct {
 	conflict int     // Conflict flag.
 	number   int     // Conflicting number.
 }
-
-const (
-	Width = 800    // Window width.
-	Size  = 4      // Between 2 and 5.
-	Level = Medium // Difficulty.
-)
 
 func NewGame(screenwidth, boardsize int) *Game {
 	game := &Game{
