@@ -13,9 +13,10 @@ import (
 )
 
 const (
-	Width = 800    // Window width.
-	Size  = 4      // Between 2 and 5.
-	Level = Medium // Difficulty.
+	Width = 800                                    // Window width.
+	Size  = 4                                      // Between 2 and 5.
+	Level = Medium                                 // Difficulty.
+	Chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" // Lowercase not supported.
 )
 
 type Point struct {
@@ -95,7 +96,7 @@ func (g *Game) drawHighlight() {
 
 	dc.SetRGBA255(0, 0, 0, g.htimer)
 	dc.DrawStringAnchored(
-		string("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"[g.number]),
+		string(Chars[g.number]),
 		(g.hrow+1.0)*g.cellsize-0.5*g.cellsize+g.offset,
 		(g.hcol+1.0)*g.cellsize-0.6*g.cellsize+g.offset,
 		0.5,
@@ -160,11 +161,6 @@ func (g *Game) Update() error {
 	dc.SetRGB255(255, 255, 255)
 	dc.Clear()
 
-	// Draw Selected Square.
-	dc.SetRGB255(88, 150, 236)
-	dc.DrawRectangle(g.Current.X*g.cellsize+g.offset, g.Current.Y*g.cellsize+g.offset, g.cellsize, g.cellsize)
-	dc.Fill()
-
 	// Draw Gray Squares for locked numbers.
 	for row := 0; row < size*size; row++ {
 		for col := 0; col < size*size; col++ {
@@ -176,11 +172,16 @@ func (g *Game) Update() error {
 		}
 	}
 
+	// Draw Selected Square.
+	dc.SetRGB255(88, 150, 236)
+	dc.DrawRectangle(g.Current.X*g.cellsize+g.offset, g.Current.Y*g.cellsize+g.offset, g.cellsize, g.cellsize)
+	dc.Fill()
+
 	// Add Number to selected square when corresponding key is pressed.
-	for i := 1; i <= size*size; i++ {
-		key := ebiten.Key0 + ebiten.Key(i)
-		if i > 9 {
-			key = ebiten.Key(i - 10)
+	for i := 1; i <= size*size || i >= len(Chars); i++ {
+		var key ebiten.Key
+		if err := key.UnmarshalText([]byte(string(Chars[i]))); err != nil {
+			continue
 		}
 		if inpututil.IsKeyJustPressed(key) {
 			x, y := int(g.Current.X), int(g.Current.Y)
@@ -204,16 +205,10 @@ func (g *Game) Update() error {
 	// Draw Numbers.
 	for row := 0; row < size*size; row++ {
 		for col := 0; col < size*size; col++ {
-			if g.Board.IsLocked(row, col) {
-				// Draw Gray Box.
-				dc.SetRGB255(170, 170, 170)
-				dc.DrawRectangle(float64(row)*g.cellsize+g.offset, float64(col)*g.cellsize+g.offset, g.cellsize, g.cellsize)
-				dc.Fill()
-			}
 			if g.Board.Has(row, col) {
 				dc.SetRGB255(0, 0, 0)
 				dc.DrawStringAnchored(
-					string("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"[g.Board.At(row, col)]),
+					string(Chars[g.Board.At(row, col)]),
 					float64(row+1)*g.cellsize-0.5*g.cellsize+g.offset,
 					float64(col+1)*g.cellsize-0.6*g.cellsize+g.offset,
 					0.5,
@@ -255,8 +250,9 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 }
 
 func main() {
-	if Size < 2 || Size > 5 {
-		panic(fmt.Sprintf("board size: %d must be between 2 and 5", Size))
+	max := int(math.Sqrt(float64(len(Chars) - 1)))
+	if Size < 2 || Size > max {
+		panic(fmt.Sprintf("board size: %d must be between 2 and %d", Size, max))
 	}
 
 	game := NewGame(Width, Size)
